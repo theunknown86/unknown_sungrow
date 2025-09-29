@@ -1,6 +1,6 @@
 Updated Home Assistant YAML for SHxxT Inverters. Tested on SH15/20/25T so far.
 - Connection via Logger port with RS485 to Ethernet adaptor recommended. WiNet untested at this stage.
-- This is loosely based on mkaiser, but has been fully rewritten. It is not a drop in replacement so plaining and time is required to switch.
+- This is loosely based on mkaiser, but has been fully rewritten. It is not a drop in replacement so planning and time is required to switch.
 
 Notes below:
 1) No need for secrets file. To configure, set IP on line 4, Port on line 5 & Device Address on Line 11.
