@@ -1,0 +1,1007 @@
+modbus:
+  - name: SungrowSBR
+    type: tcp
+    host: !secret sungrow_modbus_host_ip
+    port:  !secret sungrow_modbus_port2
+    delay: 5
+    timeout: 10
+
+    sensors:
+      - name: battery tower 1 request raw1
+        unique_id: sg_battery_tower1_request_raw1
+        device_address: !secret sungrow_modbus_slave_battery1
+        address: 10709 # reg 10710
+        input_type: input
+        data_type: custom
+        structure: ">h20s20s18xhhhhhhhhhh"
+        count: 40
+        scan_interval: 10
+
+      - name: battery tower 1 request raw2
+        unique_id: sg_battery_tower1_request_raw2
+        device_address: !secret sungrow_modbus_slave_battery1
+        address: 10764 # reg 10765
+        input_type: input
+        data_type: custom
+        structure: ">HHHHHHHHHHHHHHHH"
+        count: 16
+        scan_interval: 10
+
+      - name: battery tower 2 request raw1
+        unique_id: sg_battery_tower2_request_raw1
+        device_address: !secret sungrow_modbus_slave_battery2
+        address: 10709 # reg 10710
+        input_type: input
+        data_type: custom
+        structure: ">h20s20s18xhhhhhhhhhh"
+        count: 40
+        scan_interval: 10
+
+      - name: battery tower 2 request raw2
+        unique_id: sg_battery_tower2_request_raw2
+        device_address: !secret sungrow_modbus_slave_battery2
+        address: 10764 # reg 10765
+        input_type: input
+        data_type: custom
+        structure: ">HHHHHHHHHHHHHHHH"
+        count: 16
+        scan_interval: 10
+
+      - name: battery tower 3 request raw1
+        unique_id: sg_battery_tower3_request_raw1
+        device_address: !secret sungrow_modbus_slave_battery3
+        address: 10709 # reg 10710
+        input_type: input
+        data_type: custom
+        structure: ">h20s20s18xhhhhhhhhhh"
+        count: 40
+        scan_interval: 10
+
+      - name: battery tower 3 request raw2
+        unique_id: sg_battery_tower3_request_raw2
+        device_address: !secret sungrow_modbus_slave_battery3
+        address: 10764 # reg 10765
+        input_type: input
+        data_type: custom
+        structure: ">HHHHHHHHHHHHHHHH"
+        count: 16
+        scan_interval: 10
+
+      - name: battery tower 4 request raw1
+        unique_id: sg_battery_tower4_request_raw1
+        device_address: !secret sungrow_modbus_slave_battery4
+        address: 10709 # reg 10710
+        input_type: input
+        data_type: custom
+        structure: ">h20s20s18xhhhhhhhhhh"
+        count: 40
+        scan_interval: 10
+
+      - name: battery tower 4 request raw2
+        unique_id: sg_battery_tower4_request_raw2
+        device_address: !secret sungrow_modbus_slave_battery4
+        address: 10764 # reg 10765
+        input_type: input
+        data_type: custom
+        structure: ">HHHHHHHHHHHHHHHH"
+        count: 16
+        scan_interval: 10
+
+sensor:
+  - platform: template
+    sensors:
+      sg_battery_tower1_type:
+        friendly_name: "Battery Tower 1 Type"
+        value_template: "
+          {% if ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int)  == 0x20E6) %}
+            SBR064
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int) == 0x20E7) %}
+            SBR096
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int) == 0x20E8) %}
+            SBR128 
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int) == 0x20E9) %}
+            SBR160
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int) == 0x20EA) %}
+            SBR192
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int) == 0x20EB) %}
+            SBR224
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[0] |int) == 0x20EC) %}
+            SBR256
+          {% else %}
+            Unknown device code: {{ '%0x' % (states('sensor.battery_tower1_request_raw1').split(',')[0] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower1_serial:
+        friendly_name: "Battery Tower 1 Serial"
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[1] }}"
+
+      sg_battery_tower1_firmware:
+        friendly_name: "Battery Tower 1 Firmware"
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[2] }}"
+        
+      sg_battery_tower1_status:
+        friendly_name: "Battery Tower 1 Status"
+        value_template:
+          "{% if ((states('sensor.battery_tower1_request_raw1').split(',')[3] |int)  == 0x00) %}
+            Unplugged
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[3] |int) == 0x01) %}
+            Standby
+          {% elif ((states('sensor.battery_tower1_request_raw1').split(',')[3] |int) == 0x02) %}
+            Run
+          {% else %}
+            Unknown status code: {{ '%0x' % (states('sensor.battery_tower1_request_raw1').split(',')[3] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower1_voltage:
+        friendly_name: "Battery Tower 1 Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[4] |float /10 }}"
+
+      sg_battery_tower1_current:
+        friendly_name: "Battery Tower 1 Current"
+        unit_of_measurement: "A"
+        device_class: current
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[5] |float /10 }}"
+
+      sg_battery_tower1_temperature:
+        friendly_name: "Battery Tower 1 Temperature"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[6] |float /10 }}"
+
+      sg_battery_tower1_soc:
+        friendly_name: "Battery Tower 1 SoC"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[7] |float /10 }}"
+
+      sg_battery_tower1_soh:
+        friendly_name: "Battery Tower 1 SoH"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[8] |int }}"
+
+      sg_battery_tower1_total_battery_charge:
+        friendly_name: "Battery Tower 1 Total Battery Charge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[9] |float /10 }}"
+
+      sg_battery_tower1_total_battery_discharge:
+        friendly_name: "Battery Tower 1 Total Battery Discharge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower1_request_raw1').split(',')[11] |float /10 }}"
+
+      sg_battery_tower1_voltage_differential:
+        friendly_name: "Battery Tower 1 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[0:7] |max |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[8:15] |min |float ) /10 }}"
+
+      sg_battery_tower1_module1_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 1 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[0] |float /10000 }}"
+
+      sg_battery_tower1_module2_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 2 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[1] |float /10000 }}"
+
+      sg_battery_tower1_module3_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 3 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[2] |float /10000 }}"
+
+      sg_battery_tower1_module4_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 4 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[3] |float /10000 }}"
+
+      sg_battery_tower1_module5_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 5 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[4] |float /10000 }}"
+
+      sg_battery_tower1_module6_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 6 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[5] |float /10000 }}"
+
+      sg_battery_tower1_module7_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 7 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[6] |float /10000 }}"
+
+      sg_battery_tower1_module8_max_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 8 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[7] |float /10000 }}"
+
+      sg_battery_tower1_module1_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 1 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[8] |float /10000 }}"
+
+      sg_battery_tower1_module2_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 2 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[9] |float /10000 }}"
+
+      sg_battery_tower1_module3_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 3 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[10] |float /10000 }}"
+
+      sg_battery_tower1_module4_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 4 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[11] |float /10000 }}"
+
+      sg_battery_tower1_module5_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 5 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[12] |float /10000 }}"
+
+      sg_battery_tower1_module6_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 6 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[13] |float /10000 }}"
+
+      sg_battery_tower1_module7_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 7 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[14] |float /10000 }}"
+
+      sg_battery_tower1_module8_min_cell_voltage:
+        friendly_name: "Battery Tower 1 Module 8 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower1_request_raw2').split(',')[15] |float /10000 }}"
+
+      sg_battery_tower1_module1_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 1 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[0] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[8] |float ) /10 }}"
+
+      sg_battery_tower1_module2_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 2 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[1] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[9] |float ) /10 }}"
+
+      sg_battery_tower1_module3_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 3 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[2] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[10] |float ) /10 }}"
+
+      sg_battery_tower1_module4_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 4 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[3] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[11] |float ) /10 }}"
+
+      sg_battery_tower1_module5_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 5 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[4] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[12] |float ) /10 }}"
+
+      sg_battery_tower1_module6_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 6 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[5] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[13] |float ) /10 }}"
+
+      sg_battery_tower1_module7_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 7 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[6] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[14] |float ) /10 }}"
+
+      sg_battery_tower1_module8_voltage_differential:
+        friendly_name: "Battery Tower 1 Module 8 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower1_request_raw2').split(',')[7] |float -
+                              states('sensor.battery_tower1_request_raw2').split(',')[15] |float ) /10 }}"
+
+      sg_battery_tower2_type:
+        friendly_name: "Battery Tower 2 Type"
+        value_template: "
+          {% if ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int)  == 0x20E6) %}
+            SBR064
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int) == 0x20E7) %}
+            SBR096
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int) == 0x20E8) %}
+            SBR128 
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int) == 0x20E9) %}
+            SBR160
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int) == 0x20EA) %}
+            SBR192
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int) == 0x20EB) %}
+            SBR224
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[0] |int) == 0x20EC) %}
+            SBR256
+          {% else %}
+            Unknown device code: {{ '%0x' % (states('sensor.battery_tower2_request_raw1').split(',')[0] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower2_serial:
+        friendly_name: "Battery Tower 2 Serial"
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[1] }}"
+
+      sg_battery_tower2_firmware:
+        friendly_name: "Battery Tower 2 Firmware"
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[2] }}"
+
+      sg_battery_tower2_status:
+        friendly_name: "Battery Tower 2 Status"
+        value_template:
+          "{% if ((states('sensor.battery_tower2_request_raw1').split(',')[3] |int)  == 0x00) %}
+            Unplugged
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[3] |int) == 0x01) %}
+            Standby
+          {% elif ((states('sensor.battery_tower2_request_raw1').split(',')[3] |int) == 0x02) %}
+            Run
+          {% else %}
+            Unknown status code: {{ '%0x' % (states('sensor.battery_tower2_request_raw1').split(',')[3] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower2_voltage:
+        friendly_name: "Battery Tower 2 Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[4] |float /10 }}"
+
+      sg_battery_tower2_current:
+        friendly_name: "Battery Tower 2 Current"
+        unit_of_measurement: "A"
+        device_class: current
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[5] |float /10 }}"
+
+      sg_battery_tower2_temperature:
+        friendly_name: "Battery Tower 2 Temperature"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[6] |float /10 }}"
+
+      sg_battery_tower2_soc:
+        friendly_name: "Battery Tower 2 SoC"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[7] |float /10 }}"
+
+      sg_battery_tower2_soh:
+        friendly_name: "Battery Tower 2 SoH"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[8] |int }}"
+
+      sg_battery_tower2_total_battery_charge:
+        friendly_name: "Battery Tower 2 Total Battery Charge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[9] |float /10 }}"
+
+      sg_battery_tower2_total_battery_discharge:
+        friendly_name: "Battery Tower 2 Total Battery Discharge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower2_request_raw1').split(',')[11] |float /10 }}"
+
+      sg_battery_tower2_voltage_differential:
+        friendly_name: "Battery Tower 2 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower2_request_raw2').split(',')[0:7] |max |float -
+                              states('sensor.battery_tower2_request_raw2').split(',')[8:15] |min |float ) /10 }}"
+
+      sg_battery_tower2_module1_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 1 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[0] |float /10000 }}"
+
+      sg_battery_tower2_module2_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 2 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[1] |float /10000 }}"
+
+      sg_battery_tower2_module3_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 3 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[2] |float /10000 }}"
+
+      sg_battery_tower2_module4_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 4 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[3] |float /10000 }}"
+
+      sg_battery_tower2_module5_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 5 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[4] |float /10000 }}"
+
+      sg_battery_tower2_module6_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 6 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[5] |float /10000 }}"
+
+      sg_battery_tower2_module7_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 7 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[6] |float /10000 }}"
+
+      sg_battery_tower2_module8_max_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 8 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[7] |float /10000 }}"
+
+      sg_battery_tower2_module1_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 1 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[8] |float /10000 }}"
+
+      sg_battery_tower2_module2_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 2 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[9] |float /10000 }}"
+
+      sg_battery_tower2_module3_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 3 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[10] |float /10000 }}"
+
+      sg_battery_tower2_module4_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 4 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[11] |float /10000 }}"
+
+      sg_battery_tower2_module5_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 5 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[12] |float /10000 }}"
+
+      sg_battery_tower2_module6_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 6 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[13] |float /10000 }}"
+
+      sg_battery_tower2_module7_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 7 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[14] |float /10000 }}"
+
+      sg_battery_tower2_module8_min_cell_voltage:
+        friendly_name: "Battery Tower 2 Module 8 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower2_request_raw2').split(',')[15] |float /10000 }}"
+
+      sg_battery_tower3_module1_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 1 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[0] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[8] |float ) /10 }}"
+
+      sg_battery_tower3_module2_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 2 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[1] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[9] |float ) /10 }}"
+
+      sg_battery_tower3_module3_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 3 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[2] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[10] |float ) /10 }}"
+
+      sg_battery_tower3_module4_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 4 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[3] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[11] |float ) /10 }}"
+
+      sg_battery_tower3_module5_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 5 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[4] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[12] |float ) /10 }}"
+
+      sg_battery_tower3_module6_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 6 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[5] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[13] |float ) /10 }}"
+
+      sg_battery_tower3_module7_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 7 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[6] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[14] |float ) /10 }}"
+
+      sg_battery_tower3_module8_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 8 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[7] |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[15] |float ) /10 }}"
+
+      sg_battery_tower3_type:
+        friendly_name: "Battery Tower 3 Type"
+        value_template: "
+          {% if ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int)  == 0x20E6) %}
+            SBR064
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int) == 0x20E7) %}
+            SBR096
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int) == 0x20E8) %}
+            SBR128 
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int) == 0x20E9) %}
+            SBR160
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int) == 0x20EA) %}
+            SBR192
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int) == 0x20EB) %}
+            SBR224
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[0] |int) == 0x20EC) %}
+            SBR256
+          {% else %}
+            Unknown device code: {{ '%0x' % (states('sensor.battery_tower3_request_raw1').split(',')[0] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower3_serial:
+        friendly_name: "Battery Tower 3 Serial"
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[1] }}"
+
+      sg_battery_tower3_firmware:
+        friendly_name: "Battery Tower 3 Firmware"
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[2] }}"
+
+      sg_battery_tower3_status:
+        friendly_name: "Battery Tower 3 Status"
+        value_template:
+          "{% if ((states('sensor.battery_tower3_request_raw1').split(',')[3] |int)  == 0x00) %}
+            Unplugged
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[3] |int) == 0x01) %}
+            Standby
+          {% elif ((states('sensor.battery_tower3_request_raw1').split(',')[3] |int) == 0x02) %}
+            Run
+          {% else %}
+            Unknown status code: {{ '%0x' % (states('sensor.battery_tower3_request_raw1').split(',')[3] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower3_voltage:
+        friendly_name: "Battery Tower 3 Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[4] |float /10 }}"
+
+      sg_battery_tower3_current:
+        friendly_name: "Battery Tower 3 Current"
+        unit_of_measurement: "A"
+        device_class: current
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[5] |float /10 }}"
+
+      sg_battery_tower3_temperature:
+        friendly_name: "Battery Tower 3 Temperature"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[6] |float /10 }}"
+
+      sg_battery_tower3_soc:
+        friendly_name: "Battery Tower 3 SoC"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[7] |float /10 }}"
+
+      sg_battery_tower3_soh:
+        friendly_name: "Battery Tower 3 SoH"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[8] |int }}"
+
+      sg_battery_tower3_total_battery_charge:
+        friendly_name: "Battery Tower 3 Total Battery Charge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[9] |float /10 }}"
+
+      sg_battery_tower3_total_battery_discharge:
+        friendly_name: "Battery Tower 3 Total Battery Discharge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower3_request_raw1').split(',')[11] |float /10 }}"
+
+      sg_battery_tower3_voltage_differential:
+        friendly_name: "Battery Tower 3 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower3_request_raw2').split(',')[0:7] |max |float -
+                              states('sensor.battery_tower3_request_raw2').split(',')[8:15] |min |float ) /10 }}"
+
+      sg_battery_tower3_module1_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 1 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[0] |float /10000 }}"
+
+      sg_battery_tower3_module2_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 2 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[1] |float /10000 }}"
+
+      sg_battery_tower3_module3_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 3 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[2] |float /10000 }}"
+
+      sg_battery_tower3_module4_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 4 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[3] |float /10000 }}"
+
+      sg_battery_tower3_module5_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 5 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[4] |float /10000 }}"
+
+      sg_battery_tower3_module6_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 6 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[5] |float /10000 }}"
+
+      sg_battery_tower3_module7_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 7 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[6] |float /10000 }}"
+
+      sg_battery_tower3_module8_max_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 8 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[7] |float /10000 }}"
+
+      sg_battery_tower3_module1_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 1 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[8] |float /10000 }}"
+
+      sg_battery_tower3_module2_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 2 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[9] |float /10000 }}"
+
+      sg_battery_tower3_module3_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 3 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[10] |float /10000 }}"
+
+      sg_battery_tower3_module4_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 4 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[11] |float /10000 }}"
+
+      sg_battery_tower3_module5_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 5 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[12] |float /10000 }}"
+
+      sg_battery_tower3_module6_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 6 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[13] |float /10000 }}"
+
+      sg_battery_tower3_module7_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 7 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[14] |float /10000 }}"
+
+      sg_battery_tower3_module8_min_cell_voltage:
+        friendly_name: "Battery Tower 3 Module 8 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower3_request_raw2').split(',')[15] |float /10000 }}"
+
+      sg_battery_tower4_type:
+        friendly_name: "Battery Tower 4 Type"
+        value_template: "
+          {% if ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int)  == 0x20E6) %}
+            SBR064
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int) == 0x20E7) %}
+            SBR096
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int) == 0x20E8) %}
+            SBR128 
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int) == 0x20E9) %}
+            SBR160
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int) == 0x20EA) %}
+            SBR192
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int) == 0x20EB) %}
+            SBR224
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[0] |int) == 0x20EC) %}
+            SBR256
+          {% else %}
+            Unknown device code: {{ '%0x' % (states('sensor.battery_tower4_request_raw1').split(',')[0] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower4_serial:
+        friendly_name: "Battery Tower 4 Serial"
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[1] }}"
+
+      sg_battery_tower4_firmware:
+        friendly_name: "Battery Tower 4 Firmware"
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[2] }}"
+
+      sg_battery_tower4_status:
+        friendly_name: "Battery Tower 4 Status"
+        value_template:
+          "{% if ((states('sensor.battery_tower4_request_raw1').split(',')[3] |int)  == 0x00) %}
+            Unplugged
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[3] |int) == 0x01) %}
+            Standby
+          {% elif ((states('sensor.battery_tower4_request_raw1').split(',')[3] |int) == 0x02) %}
+            Run
+          {% else %}
+            Unknown status code: {{ '%0x' % (states('sensor.battery_tower4_request_raw1').split(',')[3] |int)  }}
+          {% endif %}"
+
+      sg_battery_tower4_voltage:
+        friendly_name: "Battery Tower 4 Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[4] |float /10 }}"
+
+      sg_battery_tower4_current:
+        friendly_name: "Battery Tower 4 Current"
+        unit_of_measurement: "A"
+        device_class: current
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[5] |float /10 }}"
+
+      sg_battery_tower4_temperature:
+        friendly_name: "Battery Tower 4 Temperature"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[6] |float /10 }}"
+
+      sg_battery_tower4_soc:
+        friendly_name: "Battery Tower 4 SoC"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[7] |float /10 }}"
+
+      sg_battery_tower4_soh:
+        friendly_name: "Battery Tower 4 SoH"
+        unit_of_measurement: "%"
+        device_class: battery
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[8] |int }}"
+
+      sg_battery_tower4_total_battery_charge:
+        friendly_name: "Battery Tower 4 Total Battery Charge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[9] |float /10 }}"
+
+      sg_battery_tower4_total_battery_discharge:
+        friendly_name: "Battery Tower 4 Total Battery Discharge"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        value_template: "{{ states('sensor.battery_tower4_request_raw1').split(',')[11] |float /10 }}"
+
+      sg_battery_tower4_voltage_differential:
+        friendly_name: "Battery Tower 4 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[0:7] |max |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[8:15] |min |float ) /10 }}"
+
+      sg_battery_tower4_module1_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 1 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[0] |float /10000 }}"
+
+      sg_battery_tower4_module2_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 2 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[1] |float /10000 }}"
+
+      sg_battery_tower4_module3_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 3 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[2] |float /10000 }}"
+
+      sg_battery_tower4_module4_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 4 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[3] |float /10000 }}"
+
+      sg_battery_tower4_module5_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 5 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[4] |float /10000 }}"
+
+      sg_battery_tower4_module6_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 6 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[5] |float /10000 }}"
+
+      sg_battery_tower4_module7_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 7 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[6] |float /10000 }}"
+
+      sg_battery_tower4_module8_max_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 8 Max Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[7] |float /10000 }}"
+
+      sg_battery_tower4_module1_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 1 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[8] |float /10000 }}"
+
+      sg_battery_tower4_module2_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 2 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[9] |float /10000 }}"
+
+      sg_battery_tower4_module3_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 3 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[10] |float /10000 }}"
+
+      sg_battery_tower4_module4_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 4 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[11] |float /10000 }}"
+
+      sg_battery_tower4_module5_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 5 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[12] |float /10000 }}"
+
+      sg_battery_tower4_module6_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 6 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[13] |float /10000 }}"
+
+      sg_battery_tower4_module7_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 7 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[14] |float /10000 }}"
+
+      sg_battery_tower4_module8_min_cell_voltage:
+        friendly_name: "Battery Tower 4 Module 8 Min Cell Voltage"
+        unit_of_measurement: "V"
+        device_class: voltage
+        value_template: "{{ states('sensor.battery_tower4_request_raw2').split(',')[15] |float /10000 }}"
+
+      sg_battery_tower4_module1_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 1 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[0] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[8] |float ) /10 }}"
+
+      sg_battery_tower4_module2_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 2 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[1] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[9] |float ) /10 }}"
+
+      sg_battery_tower4_module3_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 3 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[2] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[10] |float ) /10 }}"
+
+      sg_battery_tower4_module4_voltage_differential:
+        friendly_name: "Battery Tower 3 Module 4 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[3] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[11] |float ) /10 }}"
+
+      sg_battery_tower4_module5_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 5 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[4] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[12] |float ) /10 }}"
+
+      sg_battery_tower4_module6_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 6 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[5] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[13] |float ) /10 }}"
+
+      sg_battery_tower4_module7_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 7 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[6] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[14] |float ) /10 }}"
+
+      sg_battery_tower4_module8_voltage_differential:
+        friendly_name: "Battery Tower 4 Module 8 Voltage Differential"
+        unit_of_measurement: "mv"
+        device_class: voltage
+        value_template: "{{ ( states('sensor.battery_tower4_request_raw2').split(',')[7] |float -
+                              states('sensor.battery_tower4_request_raw2').split(',')[15] |float ) /10 }}"
