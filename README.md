@@ -20,7 +20,7 @@ Also included is YAML for reading all known registers (and many new) for SBR bat
 
 Happy to take requests for further register discovery that iSolarCloud provide, that aren't yet in HA.
 Open to testing on other inverter models... but unless you know what you're doing and don't mind troubleshooting I recommend staying away for now.
-Need testers via WiNet ( Assume some aren't available )
+Need testers via WiNet ( Assume some registers aren't available )
 
 If you're moving from another system, be sure to delete all entities and statistics or HA will mess up the naming.
 
