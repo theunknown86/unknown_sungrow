@@ -1,0 +1,2081 @@
+modbus:
+  - name: &sg_hub_name SungrowSHx_inv1
+    type: tcp
+    host: &sg_host 192.168.68.205
+    port: &sg_port 502
+    delay: 5
+    timeout: 10
+    sensors:
+      - name: Sungrow inverter serial inv1
+        unique_id: sg_inverter_serial_inv1
+        device_address: &sg_device_address 1
+        address: 4989 # reg 4990
+        input_type: input
+        data_type: string
+        count: 10
+        scan_interval: 10
+
+      - name: Sungrow device type code inv1
+        unique_id: sg_dev_code_inv1
+        device_address: *sg_device_address
+        address: 4999 # reg 5000
+        input_type: input
+        data_type: uint16
+        scan_interval: 10
+
+      - name: Inverter rated output inv1
+        unique_id: sg_inverter_rated_output_inv1
+        device_address: *sg_device_address
+        address: 5000 # reg 5001
+        input_type: input
+        data_type: uint16
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        scale: 100
+        scan_interval: 10
+
+      - name: Inverter output energy raw inv1
+        unique_id: sg_inverter_output_energy_raw_inv1
+        device_address: 1
+        address: 5002 # 5003
+        input_type: input
+        count: 3
+        data_type: custom
+        structure: ">HHH"
+        scan_interval: 10
+
+      - name: Inverter temperature inv1
+        unique_id: sg_inverter_temperature_inv1
+        device_address: *sg_device_address
+        address: 5007 # reg 5008
+        input_type: input
+        data_type: int16
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scale: 0.1
+        scan_interval: 10
+
+      - name: System state inv1
+        unique_id: sg_system_state_inv1
+        device_address: *sg_device_address
+        address: 12999 # reg 13000
+        input_type: input
+        data_type: uint16
+        precision: 0
+        scale: 1
+        state_class: measurement
+        scan_interval: 5
+
+      - name: Load power inv1
+        unique_id: sg_load_power_inv1
+        device_address: *sg_device_address
+        address: 13007 # reg 13008
+        input_type: input
+        data_type: int32
+        swap: word
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: Export power raw inv1
+        unique_id: sg_export_power_raw_inv1
+        device_address: *sg_device_address
+        address: 13009 # reg 13010
+        input_type: input
+        data_type: int32
+        swap: word
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: Power flow state raw inv1
+        unique_id: sg_power_flow_state_raw_inv1
+        device_address: *sg_device_address
+        address: 13000 # reg 13001
+        input_type: input
+        count: 1
+        data_type: custom
+        structure: ">H"
+        scan_interval: 3
+
+      - name: Inverter grid power raw1 inv1
+        unique_id: sg_inverter_grid_raw1_inv1
+        device_address: *sg_device_address
+        address: 5018 # reg 5019
+        input_type: input
+        count: 17
+        data_type: custom
+        structure: ">HHH22xHHh"
+        scan_interval: 10
+
+      - name: Inverter grid power raw2 inv1
+        unique_id: sg_inverter_grid_raw2_inv1
+        device_address: *sg_device_address
+        address: 13030 # reg 13031
+        input_type: input
+        count: 5
+        data_type: custom
+        structure: ">hhhHH"
+        scan_interval: 10
+
+      - name: Inverter grid frequency inv1
+        unique_id: sg_inverter_grid_frequency_inv1
+        device_address: *sg_device_address
+        address: 5241 # reg 5242
+        input_type: input
+        data_type: uint16
+        precision: 2
+        unit_of_measurement: "Hz"
+        device_class: frequency
+        state_class: measurement
+        scale: 0.01
+        scan_interval: 10
+
+      - name: Battery power signed inv1
+        unique_id: sg_battery_power_signed_inv1
+        device_address: *sg_device_address
+        address: 5213 # reg 5214
+        input_type: input
+        data_type: int32
+        scale: 1
+        swap: word
+        precision: 0
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Battery info raw1 inv1
+        unique_id: sg_batt_info_raw1_inv1
+        device_address: *sg_device_address
+        address: 5627 # reg 5628
+        input_type: input
+        count: 12
+        data_type: custom
+        structure: ">H12xHH4xH"
+        scan_interval: 10
+
+      - name: Battery info raw2 inv1
+        unique_id: sg_batt_info_raw2_inv1
+        device_address: *sg_device_address
+        address: 13019 # reg 13020
+        input_type: input
+        count: 6
+        data_type: custom
+        structure: ">HHHHHH"
+        scan_interval: 10
+
+      - name: inverter mppt request raw inv1
+        unique_id: sg_inverter_mppt_request_raw_inv1
+        device_address: *sg_device_address
+        address: 5010 # reg 5011
+        input_type: input
+        data_type: custom
+        structure: ">HHHHHHH"
+        count: 7
+        scan_interval: 10
+
+      - name: PV strings array raw inv1
+        unique_id: sg_pv_strings_array_raw_inv1
+        slave: *sg_device_address
+        address: 5252 # reg 5253
+        input_type: input
+        data_type: custom
+        count: 10
+        structure: ">10H"
+        scan_interval: 10
+
+      - name: inverter backup power raw inv1
+        unique_id: sg_inverter_backup_power_raw_inv1
+        device_address: *sg_device_address
+        address: 5719 # reg 5720
+        input_type: input
+        data_type: custom
+        structure: ">hhhhhhh8xHHHH"
+        count: 15
+        scan_interval: 10
+
+      - name: meter power block raw1 inv1
+        unique_id: sg_meter_power_block_raw1_inv1
+        device_address: *sg_device_address
+        address: 5600 # reg 5601
+        input_type: input
+        count: 8
+        data_type: custom
+        structure: ">HHHHHHHH"
+        scan_interval: 10
+
+      - name: meter power block raw2 inv1
+        unique_id: sg_meter_power_block_raw2_inv1
+        device_address: *sg_device_address
+        address: 5736 # reg 5737
+        input_type: input
+        count: 10
+        data_type: custom
+        structure: ">H6xHHHHHH"
+        scan_interval: 10
+
+      - name: Energy block raw1 inv1
+        unique_id: sg_energy_block_raw1_inv1
+        device_address: *sg_device_address
+        address: 13001 # reg 13002
+        input_type: input
+        count: 27
+        data_type: custom
+        structure: ">HHH42xHHH"
+        scan_interval: 10
+
+      - name: Energy block raw2 inv1
+        unique_id: sg_energy_block_raw2_inv1
+        device_address: *sg_device_address
+        address: 13035 # reg 13036
+        input_type: input
+        count: 12
+        data_type: custom
+        structure: ">HHH2xHHH4xHHH"
+        scan_interval: 10
+
+      - name: Inverter fault data raw inv1
+        unique_id: sg_fault_data_raw_inv1
+        device_address: *sg_device_address
+        address: 13049 # reg 13050
+        input_type: input
+        count: 32
+        data_type: custom
+        structure: ">HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+        scan_interval: 10
+
+      #####################
+      # holding registers
+      #####################
+
+      - name: EMS mode selection raw inv1
+        unique_id: sg_ems_mode_selection_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_ems_mode_selection 13049 # reg 13050
+        input_type: holding
+        data_type: uint16
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Battery forced charge discharge cmd raw inv1
+        unique_id: sg_battery_forced_charge_discharge_cmd_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_forced_charge_discharge_cmd 13050 # reg 13051
+        input_type: holding
+        data_type: uint16
+        precision: 0
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Export power limit inv1
+        unique_id: sg_export_power_limit_inv1
+        device_address: *sg_device_address
+        address: &reg_export_limit 13073 # reg 13074
+        input_type: holding
+        data_type: uint16
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Power rising gradient inv1
+        unique_id: sg_power_rising_gradient_inv1
+        device_address: *sg_device_address
+        address: &reg_power_rising_gradient 31201 # reg 31202
+        input_type: holding
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: "%"
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: Power decline gradient inv1
+        unique_id: sg_power_decline_gradient_inv1
+        device_address: *sg_device_address
+        address: &reg_power_decline_gradient 31200  # reg 31201
+        input_type: holding
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: "%"
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: Site import power limit raw inv1
+        unique_id: sg_site_import_power_limit_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_site_import_power_limit 32997 # reg 32998
+        input_type: holding
+        data_type: uint16
+        precision: 2
+        unit_of_measurement: "kW"
+        device_class: power
+        state_class: measurement
+        scale: 0.01
+        scan_interval: 10
+
+      - name: Export power limit mode raw inv1
+        unique_id: sg_export_power_limit_mode_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_export_limit_mode 13086 # reg 13087
+        input_type: holding
+        data_type: uint16
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Export power limit per phase mode raw inv1
+        unique_id: sg_export_power_limit_per_phase_mode_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_export_limit_per_phase_mode 31225 # reg 31224
+        input_type: holding
+        data_type: uint16
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Battery forced charge discharge power inv1
+        unique_id: sg_battery_forced_charge_discharge_power_inv1
+        device_address: *sg_device_address
+        address: &reg_forced_charge_discharge_power 13051 # reg 13052
+        input_type: holding
+        data_type: uint16
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scan_interval: 10
+
+      - name: Max SoC inv1
+        unique_id: sg_max_soc_inv1
+        device_address: *sg_device_address
+        address: &reg_max_soc 13057 # reg 13058
+        input_type: holding
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: "%"
+        device_class: battery
+        state_class: measurement
+        scale: 0.1
+        scan_interval: 10
+
+      - name: Min SoC inv1
+        unique_id: sg_min_soc_inv1
+        device_address: *sg_device_address
+        address: &reg_min_soc 13058 # reg 13059
+        input_type: holding
+        data_type: uint16
+        precision: 1
+        unit_of_measurement: "%"
+        device_class: battery
+        state_class: measurement
+        scale: 0.1
+        scan_interval: 10
+
+      - name: Reserved SoC for backup inv1
+        unique_id: sg_reserved_soc_for_backup_inv1
+        device_address: *sg_device_address
+        address: &reg_reserved_soc_for_backup 13099   # reg 13100
+        input_type: holding
+        data_type: uint16
+        unit_of_measurement: "%"
+        device_class: battery
+        state_class: measurement
+        scale: 1
+        scan_interval: 10
+
+      - name: Battery max charge power inv1
+        unique_id: sg_battery_max_charge_power_inv1
+        device_address: *sg_device_address
+        address: &reg_battery_max_charge_power 33046 # reg 33047
+        input_type: holding
+        data_type: uint16
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 10          # register stores value/10
+        scan_interval: 10
+
+      - name: Battery max discharge power inv1
+        unique_id: sg_battery_max_discharge_power_inv1
+        device_address: *sg_device_address
+        address: &reg_battery_max_discharge_power 33047 # reg 33048
+        input_type: holding
+        data_type: uint16
+        precision: 0
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        scale: 10
+        scan_interval: 10
+
+      - name: Active power limitation raw inv1
+        unique_id: sg_active_power_limitation_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_active_power_limitation_raw 31203 # reg 31204
+        input_type: holding
+        data_type: uint16
+        scan_interval: 10
+        state_class: measurement
+
+      - name: Active power limitation ratio raw inv1
+        unique_id: sg_active_power_limitation_ratio_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_active_power_limitation_ratio_raw 31204 # reg 31205
+        input_type: holding
+        data_type: uint16
+        scan_interval: 10
+        state_class: measurement
+        scale: 0.1
+        unit_of_measurement: "%"
+        device_class: power_factor
+
+      - name: APL shutdown at zero raw inv1
+        unique_id: sg_apl_shutdown_on_zero_raw_inv1
+        device_address: *sg_device_address
+        address: &reg_apl_shutdown_on_zero_raw 31212 # reg 31213
+        input_type: holding
+        data_type: uint16
+        state_class: measurement
+        scan_interval: 10
+
+    switches:
+      - name: Backup mode inv1
+        unique_id: sg_backup_mode_switch_inv1
+        slave: *sg_device_address
+        address: &reg_backup_mode 13074 # reg 13075
+        write_type: holding
+        command_on: 170
+        command_off: 85
+        scan_interval: 10
+        verify:
+          input_type: holding
+          address: *reg_backup_mode
+          state_on: 170
+          state_off: 85
+          
+template:
+  - binary_sensor:
+      # bit 0 — PV generating
+      - name: PV generating inv1
+        unique_id: sg_pv_generating_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 0)) % 2 == 1 }}"
+
+      - name: PV generating (delay) inv1
+        unique_id: sg_pv_generating_delay_inv1
+        availability: "{{ not is_state('binary_sensor.pv_generating_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.pv_generating_inv1') }}"
+
+      # bit 1 — Battery charging
+      - name: Battery charging inv1
+        unique_id: sg_battery_charging_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 1)) % 2 == 1 }}"
+
+      - name: Battery charging (delay) inv1
+        unique_id: sg_battery_charging_delay_inv1
+        availability: "{{ not is_state('binary_sensor.battery_charging_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.battery_charging_inv1') }}"
+
+      # bit 2 — Battery discharging
+      - name: Battery discharging inv1
+        unique_id: sg_battery_discharging_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 2)) % 2 == 1 }}"
+
+      - name: Battery discharging (delay) inv1
+        unique_id: sg_battery_discharging_delay_inv1
+        availability: "{{ not is_state('binary_sensor.battery_discharging_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.battery_discharging_inv1') }}"
+
+      # bit 3 — Powering loads
+      - name: Powering loads inv1
+        unique_id: sg_power_flow_to_load_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 3)) % 2 == 1 }}"
+
+      - name: Powering Loads (delay) inv1
+        unique_id: sg_powering_loads_delay_inv1
+        availability: "{{ not is_state('binary_sensor.powering_loads_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.powering_loads_inv1') }}"
+
+      # bit 4 — Exporting power
+      - name: Exporting power inv1
+        unique_id: sg_exporting_power_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 4)) % 2 == 1 }}"
+
+      - name: Exporting power (delay) inv1
+        unique_id: sg_exporting_power_delay_inv1
+        availability: "{{ not is_state('binary_sensor.exporting_power_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.exporting_power_inv1') }}"
+
+      # bit 5 — Importing power
+      - name: Importing power inv1
+        unique_id: sg_importing_power_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 5)) % 2 == 1 }}"
+
+      - name: Importing power (delay) inv1
+        unique_id: sg_importing_power_delay_inv1
+        availability: "{{ not is_state('binary_sensor.importing_power_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.importing_power_inv1') }}"
+
+      # bit 7 — Loads generating
+      - name: Loads generating inv1
+        unique_id: sg_loads_generating_inv1
+        availability: "{{ states('sensor.power_flow_state_raw_inv1') not in ['unknown','unavailable'] }}"
+        state: "{{ (states('sensor.power_flow_state_raw_inv1') | int(0) // (2 ** 7)) % 2 == 1 }}"
+
+      - name: Loads generating (delay) inv1
+        unique_id: sg_loads_generating_delay_inv1
+        availability: "{{ not is_state('binary_sensor.loads_generating_inv1', 'unavailable') }}"
+        delay_on: { seconds: 60 }
+        state: "{{ states('binary_sensor.loads_generating_inv1') }}"
+
+  - sensor:
+      - name: MPPT1 voltage inv1
+        unique_id: sg_mppt1_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[0] | float(0) / 10) if parts|length >= 2 else None }}
+
+      - name: MPPT1 current inv1
+        unique_id: sg_mppt1_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[1] | float(0) / 10) if parts|length >= 2 else None }}
+
+      - name: MPPT1 power inv1
+        unique_id: sg_mppt1_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set v = parts[0] | float(0) / 10 if parts|length >= 2 else 0 %}
+          {% set i = parts[1] | float(0) / 10 if parts|length >= 2 else 0 %}
+          {{ (v * i) | round(0) | int }}
+
+      - name: MPPT2 voltage inv1
+        unique_id: sg_mppt2_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[2] | float(0) / 10) if parts|length >= 4 else None }}
+
+      - name: MPPT2 current inv1
+        unique_id: sg_mppt2_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[3] | float(0) / 10) if parts|length >= 4 else None }}
+
+      - name: MPPT2 power inv1
+        unique_id: sg_mppt2_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set v = parts[2] | float(0) / 10 if parts|length >= 4 else 0 %}
+          {% set i = parts[3] | float(0) / 10 if parts|length >= 4 else 0 %}
+          {{ (v * i) | round(0) | int }}
+
+      - name: MPPT3 voltage inv1
+        unique_id: sg_mppt3_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[4] | float(0) / 10) if parts|length >= 6 else None }}
+
+      - name: MPPT3 current inv1
+        unique_id: sg_mppt3_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[5] | float(0) / 10) if parts|length >= 6 else None }}
+
+      - name: MPPT3 power inv1
+        unique_id: sg_mppt3_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set v = parts[4] | float(0) / 10 if parts|length >= 6 else 0 %}
+          {% set i = parts[5] | float(0) / 10 if parts|length >= 6 else 0 %}
+          {{ (v * i) | round(0) | int }}
+
+      - name: String1 voltage inv1
+        unique_id: sg_string1_voltage_inv1
+        device_class: voltage
+        state_class: measurement
+        unit_of_measurement: "V"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[0] | float(0)) / 10 }}"
+
+      - name: String1 amperage inv1
+        unique_id: sg_string1_current_inv1
+        device_class: current
+        state_class: measurement
+        unit_of_measurement: "A"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[1] | float(0)) / 100 }}"
+
+      - name: String1 power inv1
+        unique_id: sg_string1_power_inv1
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: "{{ (((states('sensor.pv_strings_array_raw_inv1').split(',')[0] | float(0)) *
+                     (states('sensor.pv_strings_array_raw_inv1').split(',')[1] | float(0))) / 1000 ) | int(0) }}"
+
+      - name: String2 voltage inv1
+        unique_id: sg_string2_voltage_inv1
+        device_class: voltage
+        state_class: measurement
+        unit_of_measurement: "V"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[2] | float(0)) / 10 }}"
+
+      - name: String2 amperage inv1
+        unique_id: sg_string2_current_inv1
+        device_class: current
+        state_class: measurement
+        unit_of_measurement: "A"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[3] | float(0)) / 100 }}"
+
+      - name: String2 power inv1
+        unique_id: sg_string2_power_inv1
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: "{{ (((states('sensor.pv_strings_array_raw_inv1').split(',')[2] | float(0)) *
+                     (states('sensor.pv_strings_array_raw_inv1').split(',')[3] | float(0))) / 1000 ) | int(0) }}"
+
+      - name: String3 voltage inv1
+        unique_id: sg_string3_voltage_inv1
+        device_class: voltage
+        state_class: measurement
+        unit_of_measurement: "V"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[4] | float(0)) / 10 }}"
+
+      - name: String3 amperage inv1
+        unique_id: sg_string3_current_inv1
+        device_class: current
+        state_class: measurement
+        unit_of_measurement: "A"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[5] | float(0)) / 100 }}"
+
+      - name: String3 power inv1
+        unique_id: sg_string3_power_inv1
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: "{{ (((states('sensor.pv_strings_array_raw_inv1').split(',')[4] | float(0)) *
+                     (states('sensor.pv_strings_array_raw_inv1').split(',')[5] | float(0))) / 1000 ) | int(0) }}"
+
+      - name: String4 voltage inv1
+        unique_id: sg_string4_voltage_inv1
+        device_class: voltage
+        state_class: measurement
+        unit_of_measurement: "V"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[6] | float(0)) / 10 }}"
+
+      - name: String4 amperage inv1
+        unique_id: sg_string4_current_inv1
+        device_class: current
+        state_class: measurement
+        unit_of_measurement: "A"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[7] | float(0)) / 100 }}"
+
+      - name: String4 power inv1
+        unique_id: sg_string4_power_inv1
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: "{{ (((states('sensor.pv_strings_array_raw_inv1').split(',')[6] | float(0)) *
+                     (states('sensor.pv_strings_array_raw_inv1').split(',')[7] | float(0))) / 1000 ) | int(0) }}"
+
+      - name: String5 voltage inv1
+        unique_id: sg_string5_voltage_inv1
+        device_class: voltage
+        state_class: measurement
+        unit_of_measurement: "V"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[8] | float(0)) / 10 }}"
+
+      - name: String5 amperage inv1
+        unique_id: sg_string5_current_inv1
+        device_class: current
+        state_class: measurement
+        unit_of_measurement: "A"
+        state: "{{ (states('sensor.pv_strings_array_raw_inv1').split(',')[9] | float(0)) / 100 }}"
+
+      - name: String5 power inv1
+        unique_id: sg_string5_power_inv1
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: "{{ (((states('sensor.pv_strings_array_raw_inv1').split(',')[8] | float(0)) *
+                     (states('sensor.pv_strings_array_raw_inv1').split(',')[9] | float(0))) / 1000 ) | int(0) }}"
+
+      - name: Total DC Power inv1
+        unique_id: sg_total_dc_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_mppt_request_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[6] | float(0) | int(0) ) if parts|length >= 7 else None }}
+
+      - name: Inverter Phase A voltage inv1
+        unique_id: sg_inverter_phase_a_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[0] | float(0) / 10) | round(1) if parts|length >= 1 else None }}
+
+      - name: Inverter Phase B voltage inv1
+        unique_id: sg_inverter_phase_b_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[1] | float(0) / 10) | round(1) if parts|length >= 2 else None }}
+
+      - name: Inverter Phase C voltage inv1
+        unique_id: sg_inverter_phase_c_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[2] | float(0) / 10) | round(1) if parts|length >= 3 else None }}
+
+      - name: Inverter Reactive power inv1
+        unique_id: sg_inverter_reactive_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[4]|int) % 65536) * 65536 + ((parts[3]|int) % 65536) if parts|length >= 5 else None %}
+          {{ out - 4294967296 if (out is not none and out >= 2147483648) else out }}
+
+      - name: Inverter Power factor inv1
+        unique_id: sg_inverter_power_factor_inv1
+        device_class: power_factor
+        unit_of_measurement: "%"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[5] | float(0) / 1000) | round(3) if parts|length >= 6 else None }}
+
+      - name: Inverter Phase A current inv1
+        unique_id: sg_phase_a_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[0] | float(0) / 10) | round(1) if parts|length >= 1 else None }}
+
+      - name: Inverter Phase B current inv1
+        unique_id: sg_phase_b_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[1] | float(0) / 10) | round(1) if parts|length >= 2 else None }}
+
+      - name: Inverter Phase C current inv1
+        unique_id: sg_phase_c_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[2] | float(0) / 10) | round(1) if parts|length >= 3 else None }}
+
+      - name: Inverter active power inv1
+        unique_id: sg_inverter_active_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_grid_power_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[4]|int) % 65536) * 65536 + ((parts[3]|int) % 65536) if parts|length >= 5 else None %}
+          {{ out - 4294967296 if (out is not none and out >= 2147483648) else out }}
+
+      - name: Import power inv1
+        unique_id: sg_import_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        state: >-
+          {% set v = states('sensor.export_power_raw_inv1')|int(0) %}
+          {{ (v * -1) if v < 0 else 0 }}
+
+      - name: Export power inv1
+        unique_id: sg_export_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        state: >-
+          {% set v = states('sensor.export_power_raw_inv1')|int(0) %}
+          {{ v if v > 0 else 0 }}
+
+      - name: Inverter Phase A power inv1
+        unique_id: sg_inverter_phase_a_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        state: >-
+          {% set v = states('sensor.inverter_phase_a_voltage_inv1')|float(0) %}
+          {% set i = states('sensor.inverter_phase_a_current_inv1')|float(0) %}
+          {{ (v * i) | round(0) | int if v and i else None }}
+
+      - name: Inverter Phase B power inv1
+        unique_id: sg_inverter_phase_b_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        state: >-
+          {% set v = states('sensor.inverter_phase_b_voltage_inv1')|float(0) %}
+          {% set i = states('sensor.inverter_phase_b_current_inv1')|float(0) %}
+          {{ (v * i) | round(0) | int if v and i else None }}
+
+      - name: Inverter Phase C power inv1
+        unique_id: sg_inverter_phase_c_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        state: >-
+          {% set v = states('sensor.inverter_phase_c_voltage_inv1')|float(0) %}
+          {% set i = states('sensor.inverter_phase_c_current_inv1')|float(0) %}
+          {{ (v * i) | round(0) | int if v and i else None }}
+
+      - name: Meter active power inv1
+        unique_id: sg_meter_active_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[1]|int) % 65536) * 65536 + ((parts[0]|int) % 65536) if parts|length >= 8 else None %}
+          {{ out - 4294967296 if (out is not none and out >= 2147483648) else out }}
+
+      - name: Meter phase A active power inv1
+        unique_id: sg_meter_phase_a_active_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[3]|int) % 65536) * 65536 + ((parts[2]|int) % 65536) if parts|length >= 8 else None %}
+          {{ out - 4294967296 if (out is not none and out >= 2147483648) else out }}
+
+      - name: Meter phase B active power inv1
+        unique_id: sg_meter_phase_b_active_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[5]|int) % 65536) * 65536 + ((parts[4]|int) % 65536) if parts|length >= 8 else None %}
+          {{ out - 4294967296 if (out is not none and out >= 2147483648) else out }}
+
+      - name: Meter phase C active power inv1
+        unique_id: sg_meter_phase_c_active_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[7]|int) % 65536) * 65536 + ((parts[6]|int) % 65536) if parts|length >= 8 else None %}
+          {{ out - 4294967296 if (out is not none and out >= 2147483648) else out }}
+
+      - name: Meter frequency inv1
+        unique_id: sg_meter_frequency_inv1
+        device_class: frequency
+        unit_of_measurement: "Hz"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[0] | float(0) / 100) if parts|length >= 1 else None }}
+
+      - name: Meter phase A voltage inv1
+        unique_id: sg_meter_phase_a_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[1] | float(0) / 10) | round(1) if parts|length >= 2 else None }}
+
+      - name: Meter phase B voltage inv1
+        unique_id: sg_meter_phase_b_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[2] | float(0) / 10) | round(1) if parts|length >= 3 else None }}
+
+      - name: Meter phase C voltage inv1
+        unique_id: sg_meter_phase_c_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[3] | float(0) / 10) | round(1) if parts|length >= 4 else None }}
+
+      - name: Meter phase A current inv1
+        unique_id: sg_meter_phase_a_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[4] | float(0) / 100) | round(2) if parts|length >= 5 else None }}
+
+      - name: Meter phase B current inv1
+        unique_id: sg_meter_phase_b_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[5] | float(0) / 100) | round(2) if parts|length >= 6 else None }}
+
+      - name: Meter phase C current inv1
+        unique_id: sg_meter_phase_c_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.meter_power_block_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[6] | float(0) / 100) | round(2) if parts|length >= 7 else None }}
+
+      - name: Phase A Backup Current inv1
+        unique_id: sg_backup_current_a_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[0] | float(0) / 10) if parts|length >= 1 else None }}
+
+      - name: Phase B Backup Current inv1
+        unique_id: sg_backup_current_b_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[1] | float(0) / 10) if parts|length >= 2 else None }}
+
+      - name: Phase C Backup Current inv1
+        unique_id: sg_backup_current_c_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[2] | float(0) / 10) if parts|length >= 3 else None }}
+
+      - name: Phase A Backup Power inv1
+        unique_id: sg_backup_power_a_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[3] | float(0)) | round(0) | int if parts|length >= 4 else None }}
+
+      - name: Phase B Backup Power inv1
+        unique_id: sg_backup_power_b_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[4] | float(0)) | round(0) | int if parts|length >= 5 else None }}
+
+      - name: Phase C Backup Power inv1
+        unique_id: sg_backup_power_c_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[5] | float(0)) | round(0) | int if parts|length >= 6 else None }}
+
+      - name: Total Backup Power inv1
+        unique_id: sg_backup_power_total_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[6] | float(0)) | round(0) | int if parts|length >= 7 else None }}
+
+      - name: Phase A Backup Voltage inv1
+        unique_id: sg_backup_voltage_a_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[7] | float(0) / 10) | round(1) if parts|length >= 8 else None }}
+
+      - name: Phase B Backup Voltage inv1
+        unique_id: sg_backup_voltage_b_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[8] | float(0) / 10) | round(1) if parts|length >= 9 else None }}
+
+      - name: Phase C Backup Voltage inv1
+        unique_id: sg_backup_voltage_c_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[9] | float(0) / 10) | round(1) if parts|length >= 10 else None }}
+
+      - name: Backup Frequency inv1
+        unique_id: sg_backup_frequency_inv1
+        device_class: frequency
+        unit_of_measurement: "Hz"
+        state: >-
+          {% set raw = states('sensor.inverter_backup_power_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[10] | float(0) / 100) | round(2) if parts|length >= 11 else None }}
+
+      - name: BDC Rated Power inv1
+        unique_id: sg_bdc_rated_power_inv1
+        device_class: power
+        unit_of_measurement: "kW"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ parts[0] | int(0) * 0.1 if parts|length >= 1 else None }}
+
+      - name: BMS Max Charging Current inv1
+        unique_id: sg_bms_max_charging_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ parts[1] | int(0) if parts|length >= 2 else None }}
+
+      - name: BMS Max Discharging Current inv1
+        unique_id: sg_bms_max_discharging_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ parts[2] | int(0) if parts|length >= 3 else None }}
+
+      - name: Battery Capacity inv1
+        unique_id: sg_battery_capacity_inv1
+        device_class: energy_storage
+        unit_of_measurement: "kWh"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw1_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[3] | float(0) * 0.01) | round(2) if parts|length >= 4 else None }}
+
+      - name: Battery Voltage inv1
+        unique_id: sg_battery_voltage_inv1
+        device_class: voltage
+        unit_of_measurement: "V"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[0] | float(0) / 10) | round(1) if parts|length >= 1 else None }}
+
+      - name: Battery Current inv1
+        unique_id: sg_battery_current_inv1
+        device_class: current
+        unit_of_measurement: "A"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[1] | float(0) / 10) | round(1) if parts|length >= 2 else None }}
+
+      - name: Battery charging power inv1
+        unique_id: sg_battery_charging_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        availability: "{{ states('sensor.battery_power_signed_inv1') not in ['unknown','unavailable'] }}"
+        state: >
+          {% set p = states('sensor.battery_power_signed_inv1') | int(0) %}
+          {{ (-p) if p < 0 else 0 }}
+
+      - name: Battery discharging power inv1
+        unique_id: sg_battery_discharging_power_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        availability: "{{ states('sensor.battery_power_signed_inv1') not in ['unknown','unavailable'] }}"
+        state: >
+          {% set p = states('sensor.battery_power_signed_inv1') | int(0) %}
+          {{ p if p > 0 else 0 }}
+
+      - name: Battery Level inv1
+        unique_id: sg_battery_level_inv1
+        device_class: battery
+        unit_of_measurement: "%"
+        state_class: measurement
+        state: >-
+          {% set raw = states('sensor.battery_info_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[3] | float(0) / 10) | round(1) if parts|length >= 4 else None }}
+
+      - name: Battery SoH inv1
+        unique_id: sg_battery_state_of_health_inv1
+        unit_of_measurement: "%"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[4] | float(0) / 10) | round(1) if parts|length >= 5 else None }}
+
+      - name: Battery Temperature inv1
+        unique_id: sg_battery_temperature_inv1
+        device_class: temperature
+        unit_of_measurement: "°C"
+        state: >-
+          {% set raw = states('sensor.battery_info_raw2_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (parts[5] | float(0) / 10) | round(1) if parts|length >= 6 else None }}
+
+      - name: Daily PV Generation inv1
+        unique_id: sg_daily_pv_generation_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw1_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (p[0]|float(0)/10)|round(1) if p|length>=1 else None }}
+
+      - name: Total PV Generation inv1
+        unique_id: sg_total_pv_generation_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw1_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (((p[2]|int)*65536 + (p[1]|int))/10)|round(1) if p|length>=3 else None }}
+
+      - name: Daily Battery Discharge inv1
+        unique_id: sg_daily_battery_discharge_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw1_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (p[3]|float(0)/10)|round(1) if p|length>=4 else None }}
+
+      - name: Total Battery Discharge inv1
+        unique_id: sg_total_battery_discharge_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw1_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (((p[5]|int)*65536 + (p[4]|int))/10)|round(1) if p|length>=6 else None }}
+
+      - name: Daily Import Energy inv1
+        unique_id: sg_daily_import_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw2_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (p[0]|float(0)/10)|round(1) if p|length>=1 else None }}
+
+      - name: Total Import Energy inv1
+        unique_id: sg_total_import_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw2_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (((p[2]|int)*65536 + (p[1]|int))/10)|round(1) if p|length>=3 else None }}
+
+      - name: Daily Battery Charge inv1
+        unique_id: sg_daily_battery_charge_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw2_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (p[3]|float(0)/10)|round(1) if p|length>=4 else None }}
+
+      - name: Total Battery Charge inv1
+        unique_id: sg_total_battery_charge_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw2_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (((p[5]|int)*65536 + (p[4]|int))/10)|round(1) if p|length>=6 else None }}
+
+      - name: Daily Export Energy inv1
+        unique_id: sg_daily_export_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw2_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (p[6]|float(0)/10)|round(1) if p|length>=7 else None }}
+
+      - name: Total Export Energy inv1
+        unique_id: sg_total_export_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.energy_block_raw2_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (((p[8]|int)*65536 + (p[7]|int))/10)|round(1) if p|length>=9 else None }}
+
+      - name: Daily Active Output Energy inv1
+        unique_id: sg_daily_output_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.inverter_output_energy_raw_inv1') %}
+          {% set p = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {{ (p[0] | float(0) / 10) | round(1) if p|length >= 1 else None }}
+
+      - name: Total Active Output Energy inv1
+        unique_id: sg_total_output_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set raw = states('sensor.inverter_output_energy_raw_inv1') %}
+          {% set parts = raw.split(',') if raw not in ['unknown','unavailable',''] else [] %}
+          {% set out = ((parts[2]|int) % 65536) * 65536 + ((parts[1]|int) % 65536) if parts|length >= 3 else None %}
+          {% set s32 = (out - 4294967296) if (out is not none and out >= 2147483648) else out %}
+          {{ (s32 / 10) | round(1) if s32 is not none else None }}
+
+      - name: Daily Consumed Energy inv1
+        unique_id: sg_site_daily_consumed_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set out = states('sensor.daily_active_output_energy_inv1') | float(0) %}
+          {% set exp = states('sensor.daily_export_energy_inv1')     | float(0) %}
+          {% set imp = states('sensor.daily_import_energy_inv1')     | float(0) %}
+          {{ (out - exp + imp) | round(1) }}
+
+      - name: Total Consumed Energy inv1
+        unique_id: sg_site_total_consumed_energy_inv1
+        device_class: energy
+        unit_of_measurement: "kWh"
+        state_class: total_increasing
+        state: >-
+          {% set out = states('sensor.total_active_output_energy_inv1') | float(0) %}
+          {% set exp = states('sensor.total_export_energy_inv1')      | float(0) %}
+          {% set imp = states('sensor.total_import_energy_inv1')      | float(0) %}
+          {{ (out - exp + imp) | round(1) }}
+
+      - name: Battery level (nominal) inv1
+        unique_id: sg_battery_level_nom_inv1
+        unit_of_measurement: "%"
+        device_class: battery
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_level_inv1', 'unavailable') 
+          and not is_state('sensor.min_soc_inv1', 'unavailable') 
+          and not is_state('sensor.max_soc_inv1', 'unavailable') 
+          }}
+        state: >-
+          {% set soc_min = states('sensor.min_soc_inv1') | float %}
+          {% set soc_max = states('sensor.max_soc_inv1') | float %}
+          {% set soc_cur = states('sensor.battery_level_inv1') | float %}
+          {{
+            (soc_min + ((soc_max - soc_min) * (soc_cur / 100))) | round(1)
+          }}
+
+      - name: Battery charge (nominal) inv1
+        unique_id: sg_battery_charge_nom_inv1
+        unit_of_measurement: "kWh"
+        device_class: energy_storage
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_capacity_inv1', 'unavailable')
+          and not is_state('sensor.battery_level_nominal_inv1', 'unavailable')
+          }}
+        state: >-
+          {{
+            ( states('sensor.battery_capacity_inv1') | float *
+            states('sensor.battery_level_nominal_inv1') | float / 100 )| round(1)
+          }}
+
+      - name: Battery charge inv1
+        unique_id: sg_battery_charge_inv1
+        unit_of_measurement: "kWh"
+        device_class: energy_storage
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_capacity_inv1', 'unavailable') 
+          and not is_state('sensor.battery_level_inv1', 'unavailable') 
+          and not is_state('sensor.min_soc_inv1', 'unavailable') 
+          and not is_state('sensor.max_soc_inv1', 'unavailable') 
+          }}
+        state: >-
+          {{ 
+            ( states('sensor.battery_capacity_inv1')|float 
+            * ( states('sensor.max_soc_inv1')|float - states('sensor.min_soc_inv1')|float ) /100 
+            * states('sensor.battery_level_inv1')|float /100 
+            ) |round(2)
+          }}
+
+      - name: "Battery Series inv1"
+        unique_id: sg_battery_series_inv1
+        icon: mdi:battery
+        availability: >-
+          {{ states('sensor.battery_capacity_inv1')|is_number }}
+        state: >-
+          {% set cap = (states('sensor.battery_capacity_inv1')|float(0) * 10) | round(0) | int %}
+          {% if cap == 0 %}
+            unknown
+          {% elif cap % 50 == 0 and cap % 32 != 0 %}
+            SBH
+          {% elif cap % 32 == 0 and cap % 50 != 0 %}
+            SBR
+          {% else %}
+            unknown
+          {% endif %}
+
+      - name: "Battery Stack Height inv1"
+        unique_id: sg_batt_stack_height_inv1
+        icon: mdi:battery-arrow-up
+        unit_of_measurement: "modules"
+        availability: >-
+          {{ states('sensor.battery_voltage_inv1')|is_number }}
+        state: >-
+          {% set series = "SBR" %}
+          {% set v = states('sensor.battery_voltage_inv1')|float(0) %}
+
+          {% if series in ['SBR','SBH'] %}
+            {% set start = 3 if series == 'SBR' else 2 %}
+            {% set stop = 8 %}
+            {% set lo_per = 63 if series == 'SBR' else 69 %}
+            {% set hi_per = 70 if series == 'SBR' else 77 %}
+
+            {% set M = namespace(val=0) %}
+            {% for m in range(start, stop + 1) %}
+              {% set lo = lo_per * m %}
+              {% set hi = hi_per * m %}
+              {% if M.val == 0 and v >= lo and v <= hi %}
+                {% set M.val = m %}
+              {% endif %}
+            {% endfor %}
+
+            {{ M.val if M.val > 0 else none }}
+          {% else %}
+            {{ none }}
+          {% endif %}
+
+      - name: "Battery max charge power est. inv1"
+        unique_id: sg_batt_max_charge_power_est_inv1
+        device_class: power
+        unit_of_measurement: "W"
+        state_class: measurement
+        state: >-
+          {% set m = states('sensor.battery_stack_height_inv1') | int(0) %}
+          {% set series = states('sensor.battery_series_inv1') %}
+          {% if m == 0 or series not in ['SBR','SBH'] %}
+            {{ none }}
+          {% else %}
+            {% set vper = 69 if series == 'SBR' else 76 %}
+            {% set amps = 30 if series == 'SBR' else 50 %}
+            {% set raw = m * vper * amps %}
+            {{ (((raw | float) / 500) | round(0, 'floor')) * 500 | int }}
+          {% endif %}
+
+      - name: "Battery Config Text inv1"
+        unique_id: sg_batt_config_text_inv1
+        icon: mdi:battery
+        availability: >-
+          {{ states('sensor.battery_series_inv1') in ['SBR','SBH']
+             and states('sensor.battery_stack_height_inv1')|is_number
+             and states('sensor.battery_capacity_inv1')|is_number }}
+        state: >-
+          {% set series = states('sensor.battery_series_inv1') %}
+          {% set m = states('sensor.battery_stack_height_inv1')|int(0) %}
+          {% set cap_c = (states('sensor.battery_capacity_inv1')|float(0) * 100) | round(0) | int %}
+
+          {% if series not in ['SBR','SBH'] or m < 1 %}
+            unknown
+          {% else %}
+            {% set unit_c = 320 if series == 'SBR' else 500 %}
+            {% set denom = m * unit_c %}
+            {% if denom == 0 %}
+              unknown
+            {% else %}
+              {% set t = (cap_c // denom) | int %}
+              {% if (cap_c % denom) != 0 or t < 1 or t > 4 %}
+                unknown
+              {% else %}
+                {% set code = (32 if series == 'SBR' else 50) * m %}
+                {{ t }} x {{ series }}{{ '%03d'|format(code) }}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+
+      - name: Battery charge (health-rated) inv1
+        unique_id: sg_battery_charge_health_rated_inv1
+        unit_of_measurement: "kWh"
+        device_class: energy_storage
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_charge_inv1', 'unavailable') 
+          and not is_state('sensor.battery_soh_inv1', 'unavailable') 
+          }}
+        state: >-
+          {{ 
+            ( states('sensor.battery_charge_inv1') | float * states('sensor.battery_soh_inv1') | float / 100  ) |round(2)
+          }}
+
+      - name: Export power limit mode inv1
+        unique_id: sg_export_power_limit_mode_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.export_power_limit_mode_raw_inv1') not in ['unknown','unavailable']
+          and states('sensor.export_power_limit_per_phase_mode_raw_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set mode = states('sensor.export_power_limit_mode_raw_inv1') | int(0) %}
+          {% set per  = states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0) %}
+          {% set map = {
+            (0x00AA, 0x0055): 'Enabled',
+            (0x0055, 0x00AA): 'Enabled Per-Phase',
+            (0x0055, 0x0055): 'Disabled'
+          } %}
+          {{ map.get((mode, per), 'Unknown - should not see me! code: mode=' ~ mode ~ ', per=' ~ per) }}
+
+      - name: Sungrow device type inv1
+        unique_id: sg_device_type_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.sungrow_device_type_code_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set entity = 'sensor.sungrow_device_type_code_inv1' %}
+          {% set code = states(entity) | int(0) %}
+          {% set map = {
+            0x0E20: 'SH5T-V11',
+            0x0E21: 'SH6T-V11',
+            0x0E22: 'SH8T-V11',
+            0x0E23: 'SH10T-V11',
+            0x0E24: 'SH12T-V11',
+            0x0E25: 'SH15T-V11',
+            0x0E26: 'SH20T-V11',
+            0x0E28: 'SH25T-V11'
+          } %}
+          {{ map.get(code, 'Unknown device code: 0x%04X' % code) }}
+
+      - name: Sungrow inverter state inv1
+        unique_id: sg_inverter_state_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.system_state_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set code = states('sensor.system_state_inv1') | int(0) %}
+          {% set map = {
+            0x0000: 'Running',
+            0x0040: 'Running',
+            0x0410: 'Off-grid Charge',
+            0x0200: 'Update Failed',
+            0x0400: 'Maintain mode',
+            0x0800: 'Forced mode',
+            0x1000: 'Off-grid mode',
+            0x1111: 'Un-Initialized',
+            0x0010: 'Initial Standby',
+            0x12000: 'Initial Standby',
+            0x1300: 'Shutdown',
+            0x0002: 'Shutdown',
+            0x1400: 'Standby',
+            0x0008: 'Standby',
+            0x1500: 'Emergency Stop',
+            0x0004: 'Emergency Stop',
+            0x1600: 'Startup',
+            0x0020: 'Startup',
+            0x1700: 'AFCI self test shutdown',
+            0x1800: 'Intelligent Station Building Status',
+            0x1900: 'Safe Mode',
+            0x2000: 'Open Loop',
+            0x2501: 'Restarting',
+            0x4000: 'External EMS mode',
+            0x4001: 'Emergency Battery Charging',
+            0x5500: 'Fault',
+            0x0100: 'Fault',
+            0x8000: 'Stop',
+            0x0001: 'Stop',
+            0x8100: 'De-rating Running',
+            0x0080: 'De-rating Running',
+            0x8200: 'Dispatch Run',
+            0x9100: 'Warn Running'
+          } %}
+          {{ map.get(code, 'Unknown - should not see me! code: ' ~ code) }}
+
+      - name: EMS mode inv1
+        unique_id: sg_ems_mode_selection_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.ems_mode_selection_raw_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set code = states('sensor.ems_mode_selection_raw_inv1')|int(0) %}
+          {% set map = { 
+            0x0000: 'Self-consumption mode (default)',
+            0x0002: 'Forced mode' 
+          } %}
+          {{ map.get(code, 'Unknown - should not see me! code: ' ~ code) }}
+
+      - name: Battery forced charge discharge cmd inv1
+        unique_id: sg_battery_forced_charge_discharge_cmd_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.battery_forced_charge_discharge_cmd_raw_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set code = states('sensor.battery_forced_charge_discharge_cmd_raw_inv1')|int(0) %}
+          {% set map = {
+            0x00CC: 'Stop (default)',
+            0x00AA: 'Forced charge',
+            0x00BB: 'Forced discharge'
+          } %}
+          {{ map.get(code, 'Unknown - should not see me! code: ' ~ code) }}
+
+      - name: Active Power Limitation inv1
+        unique_id: sg_active_power_limitation_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.active_power_limitation_raw_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set code = states('sensor.active_power_limitation_raw_inv1')|int(0) %}
+          {% set map = { 
+            0x00AA:'Enabled',
+            0x0055:'Disabled'
+          } %}
+          {{ map.get(code, 'Unknown - should not see me! code: ' ~ code) }}
+
+      - name: APL shutdown at 0% inv1
+        unique_id: sg_apl_shutdown_at_zero_inv1
+        device_class: enum
+        availability: >
+          {{ states('sensor.apl_shutdown_at_zero_raw_inv1') not in ['unknown','unavailable'] }}
+        state: >-
+          {% set code = states('sensor.apl_shutdown_at_zero_raw_inv1')|int(0) %}
+          {% set map = { 
+            0x00AA:'On',
+            0x0055:'Off'
+            } %}
+          {{ map.get(code, 'Unknown - should not see me! code: ' ~ code) }}
+
+  - number:
+      - name: Export power limit (W) inv1
+        unique_id: sg_export_power_limit_number_inv1
+        min: "0"
+        max: "{{ states('sensor.inverter_rated_output_inv1') | int(15000) }}"
+        step: "100"
+        # Modbus-> UI
+        state: "{{ states('sensor.export_power_limit_inv1') | int(0) }}"
+        # UI -> Modbus
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_export_limit
+              value: "{{ value | int(0) }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.export_power_limit_inv1
+
+      - name: Power decline gradient (%) inv1
+        unique_id: sg_power_decline_gradient_ctl_inv1
+        min: "0"
+        max: "1200"
+        step: "25"
+        # Modbus-> UI
+        state: "{{ states('sensor.power_decline_gradient_inv1') | int(0) }}"
+        # UI -> Modbus
+        set_value:
+          - action: modbus.write_register
+            data: 
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_power_decline_gradient
+              value: "{{ value | int(0) }}"
+          - delay: "00:00:01"
+          - action: homeassistant.update_entity
+            target: 
+              entity_id: sensor.power_decline_gradient_inv1
+
+      - name: Power rising gradient (%) inv1
+        unique_id: sg_power_rising_gradient_ctl_inv1
+        min: "0"
+        max: "1200"
+        step: "25"
+        # Modbus-> UI
+        state: "{{ states('sensor.power_rising_gradient_inv1') | int(0) }}"
+        # UI -> Modbus
+        set_value:
+          - action: modbus.write_register
+            data: 
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_power_rising_gradient
+              value: "{{ value | int(0) }}"
+          - delay: "00:00:01"
+          - action: homeassistant.update_entity
+            target: 
+              entity_id: sensor.power_rising_gradient_inv1
+
+      - name: Site Import Power Limit (kW) inv1
+        unique_id: sg_site_import_power_limit_inv1
+        min: "0"
+        max: "50"
+        step: "1"
+        # Modbus-> UI
+        state: "{{ states('sensor.site_import_power_limit_raw_inv1') | float(0) }}"
+        # UI -> Modbus
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_site_import_power_limit
+              value: "{{ (value | float(0) * 100) | int }}"
+          - delay: "00:00:01"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.site_import_power_limit_raw_inv1
+
+      - name: Max SoC (%) inv1
+        unique_id: sg_max_soc_number_inv1
+        min: "50"
+        max: "100"
+        step: 1"
+        state: "{{ states('sensor.max_soc_inv1') | float(0) }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_max_soc
+              value: "{{ (value | int(0)) * 10 }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.max_soc_inv1
+
+      - name: Min SoC (%) inv1
+        unique_id: sg_min_soc_number_inv1
+        min: "0"
+        max: "50"
+        step: "1"
+        state: "{{ states('sensor.min_soc_inv1') | float(0) }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_min_soc
+              value: "{{ (value | int(0)) * 10 }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.min_soc_inv1
+
+      - name: Reserved SoC for backup (%) inv1
+        unique_id: sg_reserved_soc_for_backup_control_inv1
+        min: "0"
+        max: "100"
+        step: "1"
+        state: "{{ states('sensor.reserved_soc_for_backup_inv1') | float(0) }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_reserved_soc_for_backup
+              value: "{{ value | int }}"
+          - delay: "00:00:01"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.reserved_soc_for_backup_inv1
+
+      - name: Forced charge discharge power (W) inv1
+        unique_id: sg_forced_charge_discharge_power_number_inv1
+        min: "0"
+        max: >-
+          {{ [
+              states('sensor.inverter_rated_output_inv2')|int(0),
+              states('sensor.battery_max_charge_power_est_inv1')|int(0)
+          ] | min }}
+        step: "100"
+        state: "{{ states('sensor.battery_forced_charge_discharge_power_inv1') | int(0) }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_forced_charge_discharge_power
+              value: "{{ value | int(0) }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.battery_forced_charge_discharge_power_inv1
+
+      - name: Max battery charge power (W) inv1
+        unique_id: sg_battery_max_charge_power_number_inv1
+        min: "0"
+        max: >-
+          {{ [
+              states('sensor.inverter_rated_output_inv1')|int(0),
+              states('sensor.battery_max_charge_power_est_inv1')|int(0)
+          ] | min }}
+        step: "100"
+        state: "{{ states('sensor.battery_max_charge_power_inv1') | int(0) }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_battery_max_charge_power
+              value: "{{ (value | float(0) / 10) | int }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.battery_max_charge_power_inv1
+
+      - name: Max battery discharge power (W) inv1
+        unique_id: sg_battery_max_discharge_power_number_inv1
+        min: "0"
+        max: >-
+          {{ [
+              states('sensor.inverter_rated_output_inv1')|int(0),
+              states('sensor.battery_max_charge_power_est_inv1')|int(0)
+          ] | min }}
+        step: "100"
+        state: "{{ states('sensor.battery_max_discharge_power_inv1') | int(0) }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_battery_max_discharge_power
+              value: "{{ (value | float(0) / 10) | int }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.battery_max_discharge_power_inv1
+
+      - name: Active Power Limit (W) inv1
+        unique_id: sg_active_power_limit_inv1
+        min: "0"
+        max: "{{ states('sensor.inverter_rated_output_inv1') | int(15000) }}"
+        step: "100"
+        availability: >
+          {{ states('sensor.active_power_limitation_ratio_raw_inv1') not in ['unknown','unavailable']
+             and states('sensor.inverter_rated_output_inv1') not in ['unknown','unavailable'] }}
+        # Modbus → UI
+        state: >-
+          {% set base = states('sensor.inverter_rated_output_inv1') | float(15000) %}
+          {% set pct  = states('sensor.active_power_limitation_ratio_raw_inv1') | float(0) %}
+          {% set mode = states('sensor.active_power_limitation_raw_inv1') | int(0) %}
+
+          {% if mode == 0x0055 %}
+            {{ base | round(0) | int }}
+          {% else %}
+            {{ (base * pct / 100) | round(0) | int }}
+          {% endif %}
+        # UI → Modbus
+        set_value:
+          - variables:
+              base: "{{ states('sensor.inverter_nominal_power_inv1') | float(15000) }}"
+              pct: "{{ (value / base * 100) if base > 0 else 0 }}"
+              pct_clamped: "{{ [ [pct, 100] | min, 0 ] | max }}"
+              ratio_reg: "{{ ((pct_clamped | float(0)) * 10) | round(0) | int }}"
+              enable_code: 0x00AA
+              disable_code: 0x0055
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_active_power_limitation_raw
+              value: "{{ enable_code if pct_clamped < 100 else disable_code }}"
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_apl_shutdown_on_zero_raw
+              value: "{{ disable_code }}"
+          - action: modbus.write_register
+            data:
+              hub: *sg_hub_name
+              slave: *sg_device_address
+              address: *reg_active_power_limitation_ratio_raw
+              value: "{{ ratio_reg }}"
+          - action: homeassistant.update_entity
+            target:
+              entity_id:
+                - sensor.active_power_limitation_ratio_raw_inv1
+                - sensor.active_power_limitation_raw_inv1
+                - sensor.apl_shutdown_at_zero_raw_inv1
+
+input_select:
+  set_sg_system_mode_inv1:
+    name: System mode inv1
+    options:
+      - "Shutdown"
+      - "Self Consumption"
+      - "Forced Charge"
+      - "Forced Discharge"
+
+  set_sg_export_power_limit_mode_inv1:
+    name: Export power limit mode inv1
+    options:
+      - &label_enable "Enabled"
+      - &label_enable_per_phase "Enabled Per-Phase"
+      - &label_disable "Disabled"
+
+automation:
+  - id: automation_sungrow_system_mode_inv1
+    alias: "Sungrow system mode inv1"
+    mode: queued
+    variables:
+      inv_start:     0xCF
+      inv_stop:      0xCE
+      ems_self:      0
+      ems_forced:    2
+      cmd_stop:      0x00CC
+      cmd_charge:    0x00AA
+      cmd_discharge: 0x00BB
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_system_mode_inv1
+          - sensor.sungrow_inverter_state_inv1
+          - sensor.ems_mode_selection_raw_inv1
+          - sensor.battery_forced_charge_discharge_cmd_raw_inv1
+    actions:
+      - choose:
+          # UI → Modbus
+          - conditions: "{{ trigger.entity_id == 'input_select.set_sg_system_mode_inv1' }}"
+            sequence:
+              - variables:
+                  sel: "{{ states('input_select.set_sg_system_mode_inv1') }}"
+                  map_inv: >
+                    {{ {
+                      'Shutdown':           inv_stop,
+                      'Self Consumption':   inv_start,
+                      'Forced Charge':      inv_start,
+                      'Forced Discharge':   inv_start
+                    } }}
+                  map_cmd: >
+                    {{ {
+                      'Shutdown':           cmd_stop,
+                      'Self Consumption':   cmd_stop,
+                      'Forced Charge':      cmd_charge,
+                      'Forced Discharge':   cmd_discharge
+                    } }}
+                  map_ems: >
+                    {{ {
+                      'Shutdown':           ems_self,
+                      'Self Consumption':   ems_self,
+                      'Forced Charge':      ems_forced,
+                      'Forced Discharge':   ems_forced
+                    } }}
+              - action: modbus.write_register
+                data:
+                  hub: *sg_hub_name
+                  slave: *sg_device_address
+                  address:  12999 # reg 13000 (holding reg not input reg as above)
+                  value: "{{ map_inv.get(sel, inv_start) }}"
+              - action: modbus.write_register
+                data:
+                  hub: *sg_hub_name
+                  slave: *sg_device_address
+                  address: *reg_forced_charge_discharge_cmd
+                  value: "{{ map_cmd.get(sel, cmd_stop) }}"
+              - action: modbus.write_register
+                data:
+                  hub: *sg_hub_name
+                  slave: *sg_device_address
+                  address: *reg_ems_mode_selection
+                  value: "{{ map_ems.get(sel, ems_self) }}"
+              - action: homeassistant.update_entity
+                target:
+                  entity_id:
+                    - sensor.sungrow_inverter_state_inv1
+                    - sensor.ems_mode_selection_raw_inv1
+                    - sensor.battery_forced_charge_discharge_cmd_raw_inv1
+          # Modbus → UI
+          - conditions: >
+              {{ trigger.entity_id in [
+                   'sensor.sungrow_inverter_state_inv1',
+                   'sensor.ems_mode_selection_raw_inv1',
+                   'sensor.battery_forced_charge_discharge_cmd_raw_inv1'
+                 ] }}
+            sequence:
+              - action: input_select.select_option
+                target:
+                  entity_id: input_select.set_sg_system_mode_inv1
+                data:
+                  option: >-
+                    {% set inv_shutdown = is_state('sensor.sungrow_inverter_state_inv1','Shutdown') %}
+                    {% set ems  = states('sensor.ems_mode_selection_raw_inv1')|int(0) %}
+                    {% set cmd  = states('sensor.battery_forced_charge_discharge_cmd_raw_inv1')|int(0) %}
+                    {# precedence: Shutdown > Forced Charge > Forced Discharge > Self #}
+                    {% if inv_shutdown %}
+                      Shutdown
+                    {% elif ems == 2 and cmd == 0x00AA %}
+                      Forced Charge
+                    {% elif ems == 2 and cmd == 0x00BB %}
+                      Forced Discharge
+                    {% else %}
+                      Self Consumption
+                    {% endif %}
+
+  - id: automation_sungrow_export_power_limit_mode_inv1
+    alias: "Sungrow export power limit mode inv1"
+    mode: single
+    variables:
+      enable_code: &mode_enable 0x00AA
+      disable_code: &mode_disable 0x0055
+      enable_label: *label_enable
+      enable_per_phase_label: *label_enable_per_phase
+      disable_label: *label_disable
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_export_power_limit_mode_inv1
+          - sensor.export_power_limit_mode_raw_inv1
+          - sensor.export_power_limit_per_phase_mode_raw_inv1
+      - trigger: homeassistant
+        event: start
+      - trigger: event
+        event_type: automation_reloaded
+    actions:
+      - choose:
+          # UI → Modbus
+          - conditions: "{{ trigger.entity_id == 'input_select.set_sg_export_power_limit_mode_inv1' }}"
+            sequence:
+              - action: modbus.write_register
+                data:
+                  hub: *sg_hub_name
+                  slave: *sg_device_address
+                  address: *reg_export_limit_mode
+                  value: >
+                    {% set map = {
+                      enable_label: enable_code,
+                      enable_per_phase_label: disable_code,
+                      disable_label: disable_code
+                    } %}
+                    {{ map.get(states('input_select.set_sg_export_power_limit_mode_inv1')) }}
+              - action: modbus.write_register
+                data:
+                  hub: *sg_hub_name
+                  slave: *sg_device_address
+                  address: *reg_export_limit_per_phase_mode
+                  value: >
+                    {% set map = {
+                      enable_label: disable_code,
+                      enable_per_phase_label: enable_code,
+                      disable_label: disable_code
+                    } %}
+                    {{ map.get(states('input_select.set_sg_export_power_limit_mode_inv1')) }}
+              - delay: "00:00:01"
+              - action: homeassistant.update_entity
+                target:
+                  entity_id:
+                    - sensor.export_power_limit_mode_raw_inv1
+                    - sensor.export_power_limit_per_phase_mode_raw_inv1
+          # Modbus → UI
+          - conditions: >
+              {{ trigger.platform == 'homeassistant'
+                or trigger.platform == 'event'
+                or trigger.entity_id in [
+                  'sensor.export_power_limit_mode_raw_inv1',
+                  'sensor.export_power_limit_per_phase_mode_raw_inv1'
+                ] }}
+            sequence:
+              - choose:
+                  - conditions: "{{ trigger.platform == 'homeassistant'
+                                  or trigger.platform == 'event' }}"
+                    sequence:
+                      - delay: "00:00:30"
+              - action: input_select.select_option
+                target:
+                  entity_id: input_select.set_sg_export_power_limit_mode_inv1
+                data:
+                  option: >-
+                    {% set mode = states('sensor.export_power_limit_mode_raw_inv1') | int(0) %}
+                    {% set per  = states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0) %}
+                    {% if   mode == enable_code and per == disable_code %}
+                      {{ enable_label }}
+                    {% elif mode == disable_code and per == enable_code %}
+                      {{ enable_per_phase_label }}
+                    {% elif mode == disable_code and per == disable_code %}
+                      {{ disable_label }}
+                    {% else %}
+                      {{ disable_label }}
+                    {% endif %}
+              - delay: "00:00:01"
