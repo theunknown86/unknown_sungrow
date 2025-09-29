@@ -25,3 +25,5 @@ Need testers via WiNet ( Assume some registers aren't available )
 If you're moving from another system, be sure to delete all entities and statistics or HA will mess up the naming.
 
 Feedback welcome
+
+Special note: we have registers for full PV Cut coming. Sungrow are rolling out new firmware and modbus specs to accomodate switching off ALL PV generation to facilitate max grid imports in case of negative pricing (Very handy in AU). As soon as Sungrow offer a public release i'll update this repo with the required info.
