@@ -15,9 +15,9 @@ Notes below:
 10) Many options have been combined to simplify UI elements
 
 Also included is YAML for reading all known registers (and many new) for SBR batteries. SBH is mostly done also but still a WIP, need more testers.
--This isn't as polished as the Inverter code, needs more work to be drop in if you don't know what you're doing.
--The relevant code will need to be integrated to your main sungrow yaml so this is intended as notes only.
--The per module data IS NOT available via WiNet (it blocks those registers).
+- This isn't as polished as the Inverter code, needs more work to be drop in if you don't know what you're doing.
+- The relevant code will need to be integrated to your main sungrow yaml so this is intended as notes only.
+- The per module data IS NOT available via WiNet (it blocks those registers).
 
 Happy to take requests for further register discovery that iSolarCloud provide, that aren't yet in HA.
 Open to testing on other inverter models... but unless you know what you're doing and don't mind troubleshooting I recommend staying away for now.
