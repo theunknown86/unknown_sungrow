@@ -189,6 +189,7 @@ views:
           - entity: sensor.sungrow_device_type_inv1
           - entity: sensor.sungrow_inverter_state_inv1
           - entity: sensor.inverter_temperature_inv1
+          - entity: sensor.array_insulation_resistance_inv1
           - entity: binary_sensor.pv_generating_inv1
           - entity: binary_sensor.battery_charging_inv1
           - entity: binary_sensor.battery_discharging_inv1
@@ -322,3 +323,4 @@ views:
           - entity: sensor.apl_shutdown_at_0_inv1
         title: AC Output Power Trim
 title: PV System
+
