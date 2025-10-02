@@ -140,6 +140,18 @@ modbus:
         scale: 0.01
         scan_interval: 10
 
+      - name: Array insulation resistance inv1
+        unique_id: sg_inverter_insulation_resistance_inv1
+        device_address: *sg_device_address
+        address: 5245 # reg 5246
+        input_type: input
+        data_type: uint16
+        precision: 0
+        unit_of_measurement: "kΩ"
+        state_class: measurement
+        scale: 1
+        scan_interval: 60
+
       - name: Battery power signed inv1
         unique_id: sg_battery_power_signed_inv1
         device_address: *sg_device_address
