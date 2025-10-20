@@ -1522,8 +1522,10 @@ template:
           {% set per  = states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0) %}
           {% set map = {
             (0x00AA, 0x0055): 'Enabled',
+            (0x00AA, 0xFFFF): 'Enabled',
             (0x0055, 0x00AA): 'Enabled Per-Phase',
-            (0x0055, 0x0055): 'Disabled'
+            (0x0055, 0x0055): 'Disabled',
+            (0x0055, 0xFFFF): 'Disabled'
           } %}
           {{ map.get((mode, per), 'Unknown - should not see me! code: mode=' ~ mode ~ ', per=' ~ per) }}
 
@@ -2074,24 +2076,29 @@ automation:
                       disable_label: disable_code
                     } %}
                     {{ map.get(states('input_select.set_sg_export_power_limit_mode_inv1')) }}
-              - action: modbus.write_register
-                data:
-                  hub: *sg_hub_name
-                  slave: *sg_device_address
-                  address: *reg_export_limit_per_phase_mode
-                  value: >
-                    {% set map = {
-                      enable_label: disable_code,
-                      enable_per_phase_label: enable_code,
-                      disable_label: disable_code
-                    } %}
-                    {{ map.get(states('input_select.set_sg_export_power_limit_mode_inv1')) }}
+              - choose:
+                  - conditions: >
+                      {{ (states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0)) != 0xFFFF }}
+                    sequence:
+                      - action: modbus.write_register
+                        data:
+                          hub: *sg_hub_name
+                          slave: *sg_device_address
+                          address: *reg_export_limit_per_phase_mode
+                          value: >
+                            {% set map = {
+                              enable_label: disable_code,
+                              enable_per_phase_label: enable_code,
+                              disable_label: disable_code
+                            } %}
+                            {{ map.get(states('input_select.set_sg_export_power_limit_mode_inv1')) }}
               - delay: "00:00:01"
               - action: homeassistant.update_entity
                 target:
                   entity_id:
                     - sensor.export_power_limit_mode_raw_inv1
                     - sensor.export_power_limit_per_phase_mode_raw_inv1
+  
           # Modbus → UI
           - conditions: >
               {{ trigger.platform == 'homeassistant'
@@ -2102,10 +2109,33 @@ automation:
                 ] }}
             sequence:
               - choose:
-                  - conditions: "{{ trigger.platform == 'homeassistant'
-                                  or trigger.platform == 'event' }}"
+                    - conditions: "{{ trigger.platform == 'homeassistant'
+                                    or trigger.platform == 'event' }}"
+                      sequence:
+                        - delay: "00:00:30"
+              # Update Input Select
+              - choose:
+                  - conditions: >
+                      {{ (states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0)) != 0xFFFF }}
                     sequence:
-                      - delay: "00:00:30"
+                      - action: input_select.set_options
+                        target:
+                          entity_id: input_select.set_sg_export_power_limit_mode_inv1
+                        data:
+                          options:
+                            - {{ enable_label }}
+                            - {{ enable_per_phase_label }}
+                            - {{ disable_label }}
+                  - conditions: >
+                      {{ (states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0)) == 0xFFFF }}
+                    sequence:
+                      - action: input_select.set_options
+                        target:
+                          entity_id: input_select.set_sg_export_power_limit_mode_inv1
+                        data:
+                          options:
+                            - {{ enable_label }}
+                            - {{ disable_label }}
               - action: input_select.select_option
                 target:
                   entity_id: input_select.set_sg_export_power_limit_mode_inv1
@@ -2113,13 +2143,16 @@ automation:
                   option: >-
                     {% set mode = states('sensor.export_power_limit_mode_raw_inv1') | int(0) %}
                     {% set per  = states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0) %}
-                    {% if   mode == enable_code and per == disable_code %}
-                      {{ enable_label }}
-                    {% elif mode == disable_code and per == enable_code %}
-                      {{ enable_per_phase_label }}
-                    {% elif mode == disable_code and per == disable_code %}
-                      {{ disable_label }}
+                    {% if per == 0xFFFF %}
+                      {% if   mode == enable_code %}{{ enable_label }}
+                      {% elif mode == disable_code %}{{ disable_label }}
+                      {% else %}{{ disable_label }}
+                      {% endif %}
                     {% else %}
-                      {{ disable_label }}
+                      {% if   mode == enable_code and per == disable_code %}{{ enable_label }}
+                      {% elif mode == disable_code and per == enable_code %}{{ enable_per_phase_label }}
+                      {% elif mode == disable_code and per == disable_code %}{{ disable_label }}
+                      {% else %}{{ disable_label }}
+                      {% endif %}
                     {% endif %}
               - delay: "00:00:01"
