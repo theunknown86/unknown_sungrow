@@ -2123,9 +2123,9 @@ automation:
                           entity_id: input_select.set_sg_export_power_limit_mode_inv1
                         data:
                           options:
-                            - {{ enable_label }}
-                            - {{ enable_per_phase_label }}
-                            - {{ disable_label }}
+                            - "{{ enable_label }}"
+                            - "{{ enable_per_phase_label }}"
+                            - "{{ disable_label }}"
                   - conditions: >
                       {{ (states('sensor.export_power_limit_per_phase_mode_raw_inv1') | int(0)) == 0xFFFF }}
                     sequence:
@@ -2134,8 +2134,8 @@ automation:
                           entity_id: input_select.set_sg_export_power_limit_mode_inv1
                         data:
                           options:
-                            - {{ enable_label }}
-                            - {{ disable_label }}
+                            - "{{ enable_label }}"
+                            - "{{ disable_label }}"
               - action: input_select.select_option
                 target:
                   entity_id: input_select.set_sg_export_power_limit_mode_inv1
